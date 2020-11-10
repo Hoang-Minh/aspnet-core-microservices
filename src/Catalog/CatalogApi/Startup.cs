@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CatalogApi.Data;
+using CatalogApi.Data.Interfaces;
 using CatalogApi.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,6 +33,9 @@ namespace CatalogApi
 
             // when you see ICatalogDatabseSettings in any asp.net constructor, create an object of CatalogDatabaseSettings and get its value from the CatalogDatabaseSettings in the configuration
             services.AddSingleton<ICatalogDatabaseSettings>(sp => sp.GetRequiredService<IOptions<CatalogDatabaseSettings>>().Value);
+
+            // anytime see ICatalogContext in any constructor, create CatalogContext
+            services.AddTransient<ICatalogContext, CatalogContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
