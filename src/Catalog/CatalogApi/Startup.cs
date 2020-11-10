@@ -28,6 +28,8 @@ namespace CatalogApi
         {
             services.AddControllers();
             services.Configure<CatalogDatabaseSettings>(Configuration.GetSection(nameof(CatalogDatabaseSettings)));
+
+            // when you see ICatalogDatabseSettings in any asp.net constructor, create an object of CatalogDatabaseSettings and get its value from the CatalogDatabaseSettings in the configuration
             services.AddSingleton<ICatalogDatabaseSettings>(sp => sp.GetRequiredService<IOptions<CatalogDatabaseSettings>>().Value);
         }
 
