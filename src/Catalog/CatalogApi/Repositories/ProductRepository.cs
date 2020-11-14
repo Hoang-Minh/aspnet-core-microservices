@@ -33,7 +33,7 @@ namespace CatalogApi.Repositories
 
         public async Task<bool> Delete(string id)
         {
-            var filter = Builders<Product>.Filter.ElemMatch(product => product.Id, id);
+            var filter = Builders<Product>.Filter.Eq(product => product.Id, id);
             var deleteResult = await _context.Products.DeleteOneAsync(filter);
 
             return deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
@@ -46,7 +46,8 @@ namespace CatalogApi.Repositories
 
         public async Task<IEnumerable<Product>> GetProductByCategory(string categoryName)
         {
-            var filter = Builders<Product>.Filter.ElemMatch(product => product.Category, categoryName);
+            //var filter = Builders<Product>.Filter.ElemMatch(product => product.Category, categoryName);
+            var filter = Builders<Product>.Filter.Eq(p => p.Category, categoryName);
 
             return await _context.Products.Find(filter).ToListAsync();
         }

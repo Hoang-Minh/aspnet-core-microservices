@@ -30,7 +30,7 @@ namespace CatalogApi.Controllers
             return Ok(products);
         }
 
-        [HttpGet]
+        [HttpGet("{id:length(24)}", Name ="GetProduct")]
         [ProducesResponseType(typeof(IEnumerable<Product>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<Product>> GetProductById(string id)
@@ -49,10 +49,34 @@ namespace CatalogApi.Controllers
         [HttpGet]
         [Route("[action]/{category}")]
         [ProducesResponseType(typeof(IEnumerable<Product>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProductByCategory(string categoryName)
+        public async Task<ActionResult<IEnumerable<Product>>> GetProductByCategory(string category)
         {
-            var products = await _repository.GetProductByCategory(categoryName);
+            var products = await _repository.GetProductByCategory(category);
             return Ok(products);
+        }
+
+        [HttpPost]        
+        [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<Product>> CreateProduct([FromBody] Product product)
+        {
+            await _repository.Create(product);
+
+            return CreatedAtRoute("GetProduct", new { id = product.Id }, product);
+
+        }
+
+        [HttpPut]
+        [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> UpdateProduct([FromBody] Product product)
+        {
+            return Ok(await _repository.Update(product));
+        }
+
+        [HttpDelete("{id:length(24)}")]
+        [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> DeleteProduct(string id)
+        {
+            return Ok(await _repository.Delete(id));
         }
     }
 }
