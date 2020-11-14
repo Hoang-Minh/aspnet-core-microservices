@@ -1,0 +1,10 @@
+--- 
+services: 
+  catalogapi: 
+    build: 
+      context: "."
+      dockerfile: src/Catalog/CatalogApi/Dockerfile
+    image: "${DOCKER_REGISTRY-}catalogapi"
+  catalogdb: 
+    image: mongo
+version: "3.4"
