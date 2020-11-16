@@ -1,5 +1,12 @@
 --- 
 services: 
+  basketapi: 
+    build: 
+      context: "."
+      dockerfile: src/Basket/BasketApi/Dockerfile
+    image: "${DOCKER_REGISTRY-}basketapi"
+  basketdb: 
+    image: redis
   catalogapi: 
     build: 
       context: "."
