@@ -2,12 +2,14 @@ using BasketApi.Data;
 using BasketApi.Data.Interfaces;
 using BasketApi.Repository;
 using BasketApi.Repository.Interfaces;
+using EventBusRabbitMQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using RabbitMQ.Client;
 using StackExchange.Redis;
 
 namespace BasketApi
@@ -24,6 +26,8 @@ namespace BasketApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
+
             // docker-compose -f docker-compose.yml -f docker-compose.override.yml up –d
             services.AddSingleton<ConnectionMultiplexer>(sp =>
             {
@@ -39,7 +43,25 @@ namespace BasketApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Basket API", Version = "v1" });
             });
 
-            services.AddControllers();
+            services.AddSingleton<IRabbitMQConnection>(sp =>
+            {
+                var factory = new ConnectionFactory()
+                {
+                    HostName = Configuration["EventBus:HostName"]
+                };
+
+                if(!string.IsNullOrEmpty(Configuration["EventBus:Username"]))
+                {
+                    factory.UserName = Configuration["EventBus:Username"];
+                }
+
+                if (!string.IsNullOrEmpty(Configuration["EventBus:Password"]))
+                {
+                    factory.Password = Configuration["EventBus:Password"];
+                }
+
+                return new RabbitMQConnection(factory);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
