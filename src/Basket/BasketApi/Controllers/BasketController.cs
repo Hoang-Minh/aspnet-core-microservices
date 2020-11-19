@@ -19,11 +19,11 @@ namespace BasketApi.Controllers
         private readonly IMapper _mapper;
         private readonly EventBusRabbitMQProducer _eventBus;
 
-        public BasketController(IBasketRepository repository, IMapper mapper)
+        public BasketController(IBasketRepository repository, IMapper mapper, EventBusRabbitMQProducer eventBus)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _eventBus = _eventBus ?? throw new ArgumentNullException(nameof(_eventBus));
+            _eventBus = eventBus ?? throw new ArgumentNullException(nameof(_eventBus));
         }
 
         [HttpGet]
