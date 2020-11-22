@@ -1,6 +1,6 @@
 ﻿namespace EventBusRabbitMQ.Common
 {
-    public class EventBusConstans
+    public class EventBusConstants
     {
         public const string BasketCheckoutQueue = "basketCheckoutQueue";
     }

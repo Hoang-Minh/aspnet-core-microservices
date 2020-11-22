@@ -71,7 +71,7 @@ namespace BasketApi.Controllers
 
             try
             {
-                _eventBus.PublishBasketCheckout(EventBusConstans.BasketCheckoutQueue, eventMessage);
+                _eventBus.PublishBasketCheckout(EventBusConstants.BasketCheckoutQueue, eventMessage);
             }
             catch(Exception)
             {
