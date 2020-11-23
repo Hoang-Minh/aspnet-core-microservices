@@ -1,6 +1,7 @@
 --- 
 services: 
   basketapi: 
+    container_name: basketapi
     depends_on: 
       - basketdb
       - rabbitmq
@@ -16,6 +17,7 @@ services:
       - "6379:6379"
     restart: always
   catalogapi: 
+    container_name: catalogapi
     depends_on: 
       - catalogdb
     environment: 
@@ -28,6 +30,26 @@ services:
     ports: 
       - "27017:27017"
     restart: always
+  orderdb: 
+    container_name: orderdb
+    environment: 
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: MyTestpassword!      
+    ports: 
+      - "1433:1433"
+    restart: always
+  orderingapi: 
+    container_name: orderapi
+    depends_on: 
+      - orderdb
+      - rabbitmq
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "OrderConnection:Server=orderdb;Database=OrderDb;User Id=sa;Password=MyTestpassword!;"
+      - "EventBus:HostName=rabbitmq"
+    ports: 
+      - "8002:80"
+    restart: on-failure
   rabbitmq: 
     container_name: rabbitmq
     ports: 

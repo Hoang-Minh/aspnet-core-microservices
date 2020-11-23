@@ -20,15 +20,15 @@ namespace OrderingApi.RabbitMQ
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
         private readonly IOrderRepository _orderRepository;
-        private readonly ILogger _logger;
+        //private readonly ILogger _logger;
 
-        public EventBusRabbitMQConsumer(IRabbitMQConnection connection, IMediator mediator, IMapper mapper, IOrderRepository orderRepository, ILogger logger)
+        public EventBusRabbitMQConsumer(IRabbitMQConnection connection, IMediator mediator, IMapper mapper, IOrderRepository orderRepository)
         {
             _connection = connection ?? throw new ArgumentNullException(nameof(connection));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            //_logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public void Consume()
@@ -54,7 +54,7 @@ namespace OrderingApi.RabbitMQ
                 // EXECUTION : Call Internal Checkout Operation
                 var command = _mapper.Map<CheckoutOrderCommand>(basketCheckoutEvent);
                 var result = await _mediator.Send(command);
-                _logger.LogDebug("Result is", result);
+                //_logger.LogDebug("Result is", result);
             }
         }
 
